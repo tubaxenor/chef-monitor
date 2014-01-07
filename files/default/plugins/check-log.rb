@@ -4,7 +4,7 @@
 # ===
 #
 # This plugin checks a log file for a regular expression, skipping lines
-# that have already been read, like Nagios's check_log. However, instead
+# that have already been read, like Nagios"s check_log. However, instead
 # of making a backup copy of the whole log file (very slow with large
 # logs), it stores the number of bytes read, and seeks to that position
 # next time.
@@ -14,52 +14,52 @@
 # Released under the same terms as Sensu (the MIT license); see LICENSE
 # for details.
 
-require 'rubygems' if RUBY_VERSION < '1.9.0'
-require 'sensu-plugin/check/cli'
-require 'fileutils'
+require "rubygems" if RUBY_VERSION < "1.9.0"
+require "sensu-plugin/check/cli"
+require "fileutils"
 
 class CheckLog < Sensu::Plugin::Check::CLI
 
-  BASE_DIR = '/var/cache/check-log'
+  BASE_DIR = "/var/cache/check-log"
 
   option :state_auto,
          :description => "Set state file dir automatically using name",
-         :short => '-n NAME',
-         :long => '--name NAME',
+         :short => "-n NAME",
+         :long => "--name NAME",
          :proc => proc {|arg| "#{BASE_DIR}/#{arg}" }
 
   option :state_dir,
          :description => "Dir to keep state files under",
-         :short => '-s DIR',
-         :long => '--state-dir DIR',
+         :short => "-s DIR",
+         :long => "--state-dir DIR",
          :default => "#{BASE_DIR}/default"
 
   option :log_file,
          :description => "Path to log file",
-         :short => '-f FILE',
-         :long => '--log-file FILE'
+         :short => "-f FILE",
+         :long => "--log-file FILE"
 
   option :pattern,
          :description => "Pattern to search for",
-         :short => '-q PAT',
-         :long => '--pattern PAT'
+         :short => "-q PAT",
+         :long => "--pattern PAT"
 
   option :warn,
          :description => "Warning level if pattern has a group",
-         :short => '-w N',
-         :long => '--warn N',
+         :short => "-w N",
+         :long => "--warn N",
          :proc => proc {|a| a.to_i }
 
   option :crit,
          :description => "Critical level if pattern has a group",
-         :short => '-c N',
-         :long => '--crit N',
+         :short => "-c N",
+         :long => "--crit N",
          :proc => proc {|a| a.to_i }
 
   option :only_warn,
          :description => "Warn instead of critical on match",
-         :short => '-o',
-         :long => '--warn-only',
+         :short => "-o",
+         :long => "--warn-only",
          :boolean => true
 
   def run
@@ -124,7 +124,7 @@ class CheckLog < Sensu::Plugin::Check::CLI
       end
     end
     FileUtils.mkdir_p(File.dirname(@state_file))
-    File.open(@state_file, 'w') do |file|
+    File.open(@state_file, "w") do |file|
       file.write(@bytes_to_skip + bytes_read)
     end
     [n_warns, n_crits]

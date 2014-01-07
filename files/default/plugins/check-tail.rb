@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# Checks a file's tail for a pattern
+# Checks a file"s tail for a pattern
 # ===
 #
 # DESCRIPTION:
@@ -20,31 +20,31 @@
 # Released under the same terms as Sensu (the MIT license); see LICENSE
 # for details.
 
-require 'rubygems' if RUBY_VERSION < '1.9.0'
-require 'sensu-plugin/check/cli'
-require 'fileutils'
+require "rubygems" if RUBY_VERSION < "1.9.0"
+require "sensu-plugin/check/cli"
+require "fileutils"
 
 class Tail < Sensu::Plugin::Check::CLI
 
   option :file,
     :description => "Path to file",
-    :short => '-f FILE',
-    :long => '--file FILE'
+    :short => "-f FILE",
+    :long => "--file FILE"
 
   option :pattern,
     :description => "Pattern to search for",
-    :short => '-P PAT',
-    :long => '--pattern PAT'
+    :short => "-P PAT",
+    :long => "--pattern PAT"
 
   option :lines,
     :description => "Number of lines to tail",
-    :short => '-l LINES',
-    :long => '--lines LINES'
+    :short => "-l LINES",
+    :long => "--lines LINES"
 
   option :warn_only,
     :description => "Warn instead of critical on match",
-    :short => '-w',
-    :long => '--warn-only',
+    :short => "-w",
+    :long => "--warn-only",
     :boolean => true
 
   def tail_file
@@ -68,7 +68,7 @@ class Tail < Sensu::Plugin::Check::CLI
         ok "No matches found"
       end
     else
-      critical 'File not found'
+      critical "File not found"
     end
   end
 

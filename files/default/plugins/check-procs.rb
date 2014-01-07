@@ -10,7 +10,7 @@
 # for -w and -c to override this.
 #
 # Attempts to work on Cygwin (where ps does not have the features we
-# need) by calling Windows' tasklist.exe, but this is not well tested.
+# need) by calling Windows" tasklist.exe, but this is not well tested.
 #
 # Examples:
 #
@@ -25,8 +25,8 @@
 # Released under the same terms as Sensu (the MIT license); see LICENSE
 # for details.
 
-require 'rubygems'
-require 'sensu-plugin/check/cli'
+require "rubygems"
+require "sensu-plugin/check/cli"
 
 class CheckProcs < Sensu::Plugin::Check::CLI
 
@@ -38,24 +38,24 @@ class CheckProcs < Sensu::Plugin::Check::CLI
     end
   end
 
-  option :warn_over, :short => '-w N', :proc => proc {|a| a.to_i }, :default => 1
-  option :crit_over, :short => '-c N', :proc => proc {|a| a.to_i }, :default => 1
-  option :warn_under, :short => '-W N', :proc => proc {|a| a.to_i }, :default => 0
-  option :crit_under, :short => '-C N', :proc => proc {|a| a.to_i }, :default => 0
-  option :metric, :short => '-t METRIC', :proc => proc {|a| a.to_sym }
+  option :warn_over, :short => "-w N", :proc => proc {|a| a.to_i }, :default => 1
+  option :crit_over, :short => "-c N", :proc => proc {|a| a.to_i }, :default => 1
+  option :warn_under, :short => "-W N", :proc => proc {|a| a.to_i }, :default => 0
+  option :crit_under, :short => "-C N", :proc => proc {|a| a.to_i }, :default => 0
+  option :metric, :short => "-t METRIC", :proc => proc {|a| a.to_sym }
 
-  option :match_self, :short => '-m', :boolean => true, :default => false
-  option :match_parent, :short => '-M', :boolean => true, :default => false
-  option :cmd_pat, :short => '-p PATTERN'
-  option :file_pid, :short => '-f PATH', :proc => proc {|a| read_pid(a) }
-  option :vsz, :short => '-z VSZ', :proc => proc {|a| a.to_i }
-  option :rss, :short => '-r RSS', :proc => proc {|a| a.to_i }
-  option :pcpu, :short => '-P PCPU', :proc => proc {|a| a.to_f }
-  option :state, :short => '-s STATE', :proc => proc {|a| a.split(',') }
-  option :user, :short => '-u USER', :proc => proc {|a| a.split(',') }
+  option :match_self, :short => "-m", :boolean => true, :default => false
+  option :match_parent, :short => "-M", :boolean => true, :default => false
+  option :cmd_pat, :short => "-p PATTERN"
+  option :file_pid, :short => "-f PATH", :proc => proc {|a| read_pid(a) }
+  option :vsz, :short => "-z VSZ", :proc => proc {|a| a.to_i }
+  option :rss, :short => "-r RSS", :proc => proc {|a| a.to_i }
+  option :pcpu, :short => "-P PCPU", :proc => proc {|a| a.to_f }
+  option :state, :short => "-s STATE", :proc => proc {|a| a.split(",") }
+  option :user, :short => "-u USER", :proc => proc {|a| a.split(",") }
 
   def read_lines(cmd)
-    IO.popen(cmd + ' 2>&1') do |child|
+    IO.popen(cmd + " 2>&1") do |child|
       child.read.split("\n")
     end
   end
@@ -70,10 +70,10 @@ class CheckProcs < Sensu::Plugin::Check::CLI
 
   def get_procs
     if on_cygwin?
-      read_lines('ps -aWl').drop(1).map do |line|
-        # Horrible hack because cygwin's ps has no o option, every
+      read_lines("ps -aWl").drop(1).map do |line|
+        # Horrible hack because cygwin"s ps has no o option, every
         # format includes the STIME column (which may contain spaces),
-        # and the process state (which isn't actually a column) can be
+        # and the process state (which isn"t actually a column) can be
         # blank. As of revision 1.35, the format is:
         # const char *lfmt = "%c %7d %7d %7d %10u %4s %4u %8s %s\n";
         state = line.slice!(0..0)
@@ -81,7 +81,7 @@ class CheckProcs < Sensu::Plugin::Check::CLI
         line_to_hash(line, :pid, :ppid, :pgid, :winpid, :tty, :uid, :command).merge(:state => state)
       end
     else
-      read_lines('ps axwwo user,pid,vsz,rss,pcpu,state,command').drop(1).map do |line|
+      read_lines("ps axwwo user,pid,vsz,rss,pcpu,state,command").drop(1).map do |line|
         line_to_hash(line, :user, :pid, :vsz, :rss, :pcpu, :state, :command)
       end
     end
@@ -102,8 +102,8 @@ class CheckProcs < Sensu::Plugin::Check::CLI
 
     msg = "Found #{procs.size} matching processes"
     msg += "; cmd /#{config[:cmd_pat]}/" if config[:cmd_pat]
-    msg += "; state #{config[:state].join(',')}" if config[:state]
-    msg += "; user #{config[:user].join(',')}" if config[:user]
+    msg += "; state #{config[:state].join(",")}" if config[:state]
+    msg += "; user #{config[:user].join(",")}" if config[:user]
     msg += "; vsz > #{config[:vsz]}" if config[:vsz]
     msg += "; rss > #{config[:rss]}" if config[:rss]
     msg += "; pcpu > #{config[:pcpu]}" if config[:pcpu]

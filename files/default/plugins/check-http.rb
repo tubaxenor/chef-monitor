@@ -13,28 +13,28 @@
 # Released under the same terms as Sensu (the MIT license); see LICENSE
 # for details.
 
-require 'rubygems' if RUBY_VERSION < '1.9.0'
-require 'sensu-plugin/check/cli'
-require 'net/http'
-require 'net/https'
+require "rubygems" if RUBY_VERSION < "1.9.0"
+require "sensu-plugin/check/cli"
+require "net/http"
+require "net/https"
 
 class CheckHTTP < Sensu::Plugin::Check::CLI
 
-  option :url, :short => '-u URL'
-  option :host, :short => '-h HOST'
-  option :path, :short => '-p PATH'
-  option :port, :short => '-P PORT', :proc => proc { |a| a.to_i }
-  option :header, :short => '-H HEADER', :long => '--header HEADER'
-  option :ssl, :short => '-s', :boolean => true, :default => false
-  option :insecure, :short => '-k', :boolean => true, :default => false
-  option :user, :short => '-U', :long => '--username USER'
-  option :password, :short => '-a', :long => '--password PASS'
-  option :cert, :short => '-c FILE'
-  option :cacert, :short => '-C FILE'
-  option :pattern, :short => '-q PAT'
-  option :timeout, :short => '-t SECS', :proc => proc { |a| a.to_i }, :default => 15
-  option :redirectok, :short => '-r', :boolean => true, :default => false
-  option :redirectto, :short => '-R URL'
+  option :url, :short => "-u URL"
+  option :host, :short => "-h HOST"
+  option :path, :short => "-p PATH"
+  option :port, :short => "-P PORT", :proc => proc { |a| a.to_i }
+  option :header, :short => "-H HEADER", :long => "--header HEADER"
+  option :ssl, :short => "-s", :boolean => true, :default => false
+  option :insecure, :short => "-k", :boolean => true, :default => false
+  option :user, :short => "-U", :long => "--username USER"
+  option :password, :short => "-a", :long => "--password PASS"
+  option :cert, :short => "-c FILE"
+  option :cacert, :short => "-C FILE"
+  option :pattern, :short => "-q PAT"
+  option :timeout, :short => "-t SECS", :proc => proc { |a| a.to_i }, :default => 15
+  option :redirectok, :short => "-r", :boolean => true, :default => false
+  option :redirectto, :short => "-R URL"
 
   def run
     if config[:url]
@@ -42,10 +42,10 @@ class CheckHTTP < Sensu::Plugin::Check::CLI
       config[:host] = uri.host
       config[:path] = uri.path
       config[:port] = uri.port
-      config[:ssl] = uri.scheme == 'https'
+      config[:ssl] = uri.scheme == "https"
     else
       unless config[:host] and config[:path]
-        unknown 'No URL specified'
+        unknown "No URL specified"
       end
       config[:port] ||= config[:ssl] ? 443 : 80
     end
@@ -84,7 +84,7 @@ class CheckHTTP < Sensu::Plugin::Check::CLI
       req.basic_auth config[:user], config[:password]
     end
     if config[:header]
-      header, value = config[:header].split(':', 2)
+      header, value = config[:header].split(":", 2)
       req[header] = value.strip
     end
     res = http.request(req)
@@ -107,10 +107,10 @@ class CheckHTTP < Sensu::Plugin::Check::CLI
           if config[:redirectok]
             ok "#{res.code}, #{res.body.size} bytes"
           elsif config[:redirectto]
-            if config[:redirectto] == res['Location']
-              ok "#{res.code} found redirect to #{res['Location']}"
+            if config[:redirectto] == res["Location"]
+              ok "#{res.code} found redirect to #{res["Location"]}"
             else
-              critical "expected redirect to #{config[:redirectto]} instead redirected to #{res['Location']}"
+              critical "expected redirect to #{config[:redirectto]} instead redirected to #{res["Location"]}"
             end
           end
         else
