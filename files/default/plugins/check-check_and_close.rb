@@ -1,8 +1,12 @@
+#!/usr/bin/env ruby
+
 require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 require 'batsd'
 
 class CheckCheckAndClose < Sensu::Plugin::Check::CLI
+  option :warn, :short => '-w VALUE'
+  option :crit, :short => '-c VALUE'
 
   def run
     total = error_check(Time.now - 720)
