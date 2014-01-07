@@ -47,3 +47,4 @@ end
 node.override["sensu"]["rabbitmq"]["host"] = master_address
 node.override["sensu"]["redis"]["host"] = master_address
 node.override["sensu"]["api"]["host"] = master_address
+node.override["sensu"]["dashboard"]["host"] = master_address
