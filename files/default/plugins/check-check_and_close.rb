@@ -9,7 +9,7 @@ class CheckCheckAndClose < Sensu::Plugin::Check::CLI
   option :crit, :short => '-c VALUE'
 
   def run
-    total = error_check(Time.now - 720)
+    total = error_check(Time.now - 720).to_i
     critical if total < config[:crit]
     warning  if total < config[:warn]
     ok
